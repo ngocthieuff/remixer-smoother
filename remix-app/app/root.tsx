@@ -1,33 +1,47 @@
-import { cssBundleHref } from "@remix-run/css-bundle";
-import type { LinksFunction } from "@remix-run/node";
-import {
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "@remix-run/react";
+import { Link, Outlet } from "@remix-run/react"
+import type { ReactNode } from "react"
 
-export const links: LinksFunction = () => [
-  ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
-];
+const App = () => (
+  <Document>
+  <Layout>
+    <Outlet />
+  </Layout>
+</Document>
+)
 
-export default function App() {
+export default App
+
+interface Props {
+  children: ReactNode
+  title?: string
+}
+
+const Document = (props: Props) => {
+  const { children, title } = props
+  return <html>
+    <head>
+      <title>{title ?? "Remixer Smoother"}</title>
+    </head>
+    {children}
+  </html>
+}
+
+function Layout({ children } : { children: ReactNode }) {
   return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        <Outlet />
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
-      </body>
-    </html>
-  );
+    <>
+      <nav className='navbar'>
+        <Link to='/' className='logo'>
+          Remix
+        </Link>
+
+        <ul className='nav'>
+          <li>
+            <Link to='/posts'>Posts</Link>
+          </li>
+        </ul>
+      </nav>
+
+      <div className='container'>{children}</div>
+    </>
+  )
 }
